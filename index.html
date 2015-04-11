@@ -77,6 +77,28 @@
 
         }
 
+        function drawCircles(){
+            for(min circles; max circles; circles++){
+
+                var circle = new Circle(radius, speed, width, xPos, yPos);
+                circles.push(circle);
+            }
+            draw();
+
+        }
+        drawCircles();
+
+        function draw(){
+
+            mainContext.clearRect();
+
+            for(min circles; max circles; circles++){
+                var myCircle = circles[i];
+                myCircle.update();
+            }
+            requestAnimationFrame(draw);
+        }
+
     </script>
 
 </body>
