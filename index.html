@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Circles on Circles</title>
+
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
+        #myCanvas {
+            border: 1px #CCC solid;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <canvas id="myCanvas" width="500" height=""500>
+
+        </canvas>
+    </div>
+
+    <script>
+
+        var mainCanvas = document.getElementById("myCanvas");
+        var mainContext = mainCanvas.getContext('2d');
+
+        var circles = new Array();
+        // this array will handle the objects which will eventually populate the canvas
+
+        var requestAnimationFrame = window.requestAnimationFrame ||
+                                    window.mozRequestAnimationFrame ||
+                                    window.webkitRequestAnimationFrame ||
+                                    window.msRequestAnimationFrame;
+        // above must be fallbacks dependant on which browser will be used
+
+        function Circle(radius, speed, width, xPos, yPos){
+            // so this is an object defined as a function, however a prototype function call follows
+            // this appears to be the object defined via attributes and then methods
+            // functions added via the prototype.update syntax
+            // unclear if this the code authors
+            this.radius = radius;
+            this.speed = speed;
+            this.width = width;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.opacity = 0.5 + Math.random() * .5;
+
+            this.counter = 0;
+
+            var signHelper = Math.floor(Math.random()*2);
+
+            if (signHelper == 1) {
+                this.sign = -1;
+            } else {
+                this.sign = 1;
+            }
+        }
+
+        Circle.prototype.update = function(){
+
+        }
+
+    </script>
+
+</body>
+</html>
