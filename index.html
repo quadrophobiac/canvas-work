@@ -62,6 +62,19 @@
 
         Circle.prototype.update = function(){
 
+            this.counter += this.sign * this.speed;
+
+            mainContext.beginPath();
+            // consult above with Mozilla tutorial
+            //  starts a new path by emptying the list of sub-paths.
+
+            mainContext.arc();
+
+            mainContext.closePath();
+
+            mainContext.fillStyle = '';
+            mainContext.fill();
+
         }
 
     </script>
