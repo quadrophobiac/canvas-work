@@ -68,7 +68,14 @@
             // consult above with Mozilla tutorial
             //  starts a new path by emptying the list of sub-paths.
 
-            mainContext.arc();
+            mainContext.arc(
+                this.xPos + Math.cos(this.counter / 100) * this.radius,
+                this.yPos + Math.sin(this.counter / 100) * this.radius,
+                this.width,
+                0, // start angle
+                Math.PI * 2, // end angle
+                false);
+
 
             mainContext.closePath();
 
