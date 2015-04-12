@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Two Circles in Orbit</title>
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
+        #myCanvas {
+            border: 1px #CCC solid;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="container">
+    <canvas id="myCanvas" width="600" height="300">
+
+    </canvas>
+</div>
+
+<script>
+
+    var mainCanvas = document.getElementById("myCanvas");
+    var mainContext = mainCanvas.getContext('2d');
+    // this is an 'access API call'
+
+    var orbits = new Array();
+
+    var requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+    // above must be fallbacks dependant on which browser will be used
+
+    function orbit() = {
+
+    }
+
+    function drawPacman() = {
+
+        requestAnimationFrame(drawPacman());
+
+    }
+
+    drawPacman();
+
+    /* I want to draw an arc that creates the line outline of a circle
+    * convention for this is that the params for arc:
+    * start angle = 0
+    * end angle = Math.PI*2 : however 360 also works
+    * , to achieve effect of chunk missing from arc, you can do Math.PI*2
+    * initial param can also be wrttien Math.PI*0,Math.PI*1.95
+    * */
+
+</script>
+
+</body>
+</html>

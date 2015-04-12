@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+<!--http://www.kirupa.com/html5/animating_many_things_on_a_canvas.htm-->
+<!--great tutorial, and has pointers to the relevant further reading-->
 <html>
 <head lang="en">
     <meta charset="UTF-8">
@@ -18,7 +21,7 @@
 <body>
 
     <div id="container">
-        <canvas id="myCanvas" width="500" height=""500>
+        <canvas id="myCanvas" width="500" height="500">
 
         </canvas>
     </div>
@@ -27,6 +30,7 @@
 
         var mainCanvas = document.getElementById("myCanvas");
         var mainContext = mainCanvas.getContext('2d');
+        // this is an 'access API call'
 
         var circles = new Array();
         // this array will handle the objects which will eventually populate the canvas
@@ -40,6 +44,7 @@
         function Circle(radius, speed, width, xPos, yPos){
             // so this is an object defined as a function, however a prototype function call follows
             // this appears to be the object defined via attributes and then methods
+            // this is a constructor function
             // functions added via the prototype.update syntax
             // unclear if this the code authors
             this.radius = radius;
@@ -61,8 +66,9 @@
         }
 
         Circle.prototype.update = function(){
-
+            // responsible for storing the circle's various properties and helping draw itself.
             this.counter += this.sign * this.speed;
+            // counter variable is what determines the position of a circle
 
             mainContext.beginPath();
             // consult above with Mozilla tutorial
@@ -71,6 +77,8 @@
             mainContext.arc(
                 this.xPos + Math.cos(this.counter / 100) * this.radius,
                 this.yPos + Math.sin(this.counter / 100) * this.radius,
+                    // the counter variable is prominently used in setting your
+                    // circle's horizontal and vertical drawing locations
                 this.width,
                 0, // start angle
                 Math.PI * 2, // end angle
@@ -87,9 +95,9 @@
         function drawCircles(){
             for(var i = 0; i < 100; i++){
 
-                var randomX = Math.round();
-                var randomY = Math.round();
-                var speed = .2 + Math.random() * 100;
+                var xPos = Math.round(-200 + Math.random() * 700);
+                var yPos = Math.round(-200 + Math.random() * 700);
+                var speed = .2 + Math.random() * 3;
                 var size = 5 + Math.random() * 100;
                 var radius = 50 + Math.random() * 100;
 
@@ -99,18 +107,24 @@
             draw();
 
         }
-        drawCircles();
-
         function draw(){
 
-            mainContext.clearRect();
+            mainContext.clearRect(0,0,500,500);
 
-            for(min circles; max circles; circles++){
+            for(var i = 0; i < circles.length; i++){
                 var myCircle = circles[i];
                 myCircle.update();
             }
             requestAnimationFrame(draw);
+            // arg passed to requestAnimationFrame is a callback
+            // this is the convention for this function
+            // it is this function that enables smooth animation
+            // its a 60fps function The number of callbacks is usually 60 times per second
+            // therefore multiples of above are best for scaling times
         }
+
+        drawCircles();
+
 
     </script>
 
