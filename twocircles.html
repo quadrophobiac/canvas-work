@@ -37,13 +37,28 @@
             window.msRequestAnimationFrame;
     // above must be fallbacks dependant on which browser will be used
 
-    function orbit() = {
+    function orbit() {
 
     }
 
-    function drawPacman() = {
+    function drawPacman() {
 
-        requestAnimationFrame(drawPacman());
+        mainContext.clearRect(0,0,600,300);
+        mainContext.beginPath();
+        mainContext.arc(
+            150,
+            150,
+            105,
+            Math.PI*0.05,// start angle,
+            Math.PI*1.95,// end angle
+            false
+        );
+        mainContext.strokeStyle = 'rgba(0,153,255,0.4)';
+//        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
+//        mainContext.fill();
+        mainContext.stroke();
+        mainContext.closePath();
+        requestAnimationFrame(drawPacman);
 
     }
 
