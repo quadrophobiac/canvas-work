@@ -36,7 +36,7 @@
 
     var mainCanvas = document.getElementById("myCanvas");
     var mainContext = mainCanvas.getContext('2d');
-    mainContext.strokeStyle = 'rgb(0,153,255)'; // circles to have same stroke stlye for now
+//    mainContext.strokeStyle = 'lightgreen'; // circles to have same stroke stlye for now
     // this is an 'access API call'
     mainContext.scale(0.4,0.4);
     mainContext.rotate(-Math.PI/2);
@@ -56,24 +56,30 @@
 
     }
 
-    function Circle(xPos, startAngle, endAngle){
+    function Circle(xPos, startAngle, endAngle, color){
         this.yPos = 150; // hardcoded because of canvas size
         this.width = 105; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
         this.startAngle = startAngle+0.05;
         this.endAngle = endAngle-0.05;
         this.xPos = xPos;
-        this.color = "lightgreen";
+        this.color = color || 'lightgreen';
+        this.speed = speed || 0.05;
     }
 
     Circle.prototype.draw = function(){
         // abstracting the canvas rendering methods into this function
+        // can either pass speed as a param for this function, or include it as a property of each circle
 
-        this.counter += 0.05;
-
+//        if(speed){
+////            console.log("speed param passed");
+//        } else {
+////            console.log("default increment speed being used");
+//            this.counter += 0.05;
+//        }
 //        var startAngle;
 //        var endAngle;
-
+        mainContext.strokeStyle = this.color;
         mainContext.beginPath();
         mainContext.arc(
                 this.xPos,
@@ -111,8 +117,8 @@
 
 
     function createCircles(){
-        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5); // 12 o clock start
-        var orbit2 = new Circle(350, Math.PI*1.45,Math.PI*1.5);
+        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)'); // 12 o clock start
+        var orbit2 = new Circle(350, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)');
         orbits.push(orbit1, orbit2);
         console.log(orbits.length);
         console.log("Pi * 0.5= "+Math.PI*0.5+" Pi*1 = "+Math.PI*1.0+"+Math.PI*1.5 = "+Math.PI*1.4+" Math.PI*2.0 = "+Math.PI*2);
@@ -128,6 +134,7 @@
 //        }
         for(i = 0; i < orbits.length; i++){
             var theOrbit = orbits[i];
+//            console.log(theOrbit);
             theOrbit.draw();
 //            console.log(i);
         }
