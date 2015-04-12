@@ -10,6 +10,15 @@
         }
         #myCanvas {
             border: 1px #CCC solid;
+            background-color: rgba(158, 167, 184, 0.2);
+        }
+
+        #staticCircle{
+            color: rgb(0,153,255);
+        }
+
+        #movingOmmission{
+            color: rgb(49, 255, 80);
         }
 
     </style>
@@ -29,6 +38,8 @@
     var mainContext = mainCanvas.getContext('2d');
     // this is an 'access API call'
 
+//    mainContext.globalCompositeOperation = 'destination-in';
+
     var orbits = new Array();
 
     var requestAnimationFrame = window.requestAnimationFrame ||
@@ -41,28 +52,72 @@
 
     }
 
-    function drawPacman() {
-
+    function circle(){
         mainContext.clearRect(0,0,600,300);
         mainContext.beginPath();
         mainContext.arc(
-            150,
-            150,
-            105,
-            Math.PI*0.05,// start angle,
-            Math.PI*1.95,// end angle
-            false
+                150,
+                150,
+                105,
+                Math.PI*0.00,// start angle,
+                Math.PI*1.95,// end angle
+                false
         );
         mainContext.strokeStyle = 'rgba(0,153,255,0.4)';
 //        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
 //        mainContext.fill();
         mainContext.stroke();
         mainContext.closePath();
-        requestAnimationFrame(drawPacman);
-
     }
 
-    drawPacman();
+    function nugget(){
+        mainContext.clearRect(0,0,600,300);
+        mainContext.beginPath();
+        mainContext.arc(
+                450,
+                150,
+                105,
+                Math.PI*0.90,// start angle,
+                Math.PI*1.05,// end angle
+                false
+        );
+        mainContext.strokeStyle = 'rgba(49, 255, 80, 0.4)';
+//        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
+//        mainContext.fill();
+        mainContext.stroke();
+        mainContext.closePath();
+    }
+
+    function drawPacman() {
+        // function that tries to draw an arc that constantly has a space missing
+        // seems to stall and chew up memory
+//        console.log(typeof(Math.PI*0.95));
+        for(var i = 0; i <= 2; i+=.05){
+//            console.log(Math.PI*i);
+            mainContext.clearRect(0,0,600,300);
+            mainContext.beginPath();
+            mainContext.arc(
+                150,
+                150,
+                105,
+//                Math.PI*0.05,// start angle,
+//                Math.PI*1.95,// end angle
+                Math.PI*(0),// start angle,
+                Math.PI*(0+i),// end angle
+                false
+            );
+            mainContext.strokeStyle = 'rgb(0,153,255)';
+    //        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
+    //        mainContext.fill();
+            mainContext.stroke();
+            mainContext.closePath();
+        }
+//        requestAnimationFrame(drawPacman);
+
+    }
+    circle();
+    nugget();
+//    drawPacman();
 
     /* I want to draw an arc that creates the line outline of a circle
     * convention for this is that the params for arc:
