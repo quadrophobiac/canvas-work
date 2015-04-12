@@ -38,7 +38,10 @@
     var mainContext = mainCanvas.getContext('2d');
     mainContext.strokeStyle = 'rgb(0,153,255)'; // circles to have same stroke stlye for now
     // this is an 'access API call'
-
+    mainContext.scale(0.4,0.4);
+    mainContext.rotate(-Math.PI/2);
+    mainContext.setTransform(1, 0, 0, 1, 0, 0);
+    mainContext.lineWidth = 5;
 //    mainContext.globalCompositeOperation = 'destination-in';
 
     var orbits = new Array();
@@ -53,12 +56,14 @@
 
     }
 
-    function Circle(xPos){
+    function Circle(xPos, startAngle, endAngle){
         this.yPos = 150; // hardcoded because of canvas size
         this.width = 105; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
-
+        this.startAngle = startAngle+0.05;
+        this.endAngle = endAngle-0.05;
         this.xPos = xPos;
+        this.color = "lightgreen";
     }
 
     Circle.prototype.draw = function(){
@@ -66,18 +71,19 @@
 
         this.counter += 0.05;
 
-        var startAngle;
-        var endAngle;
+//        var startAngle;
+//        var endAngle;
 
         mainContext.beginPath();
         mainContext.arc(
                 this.xPos,
                 this.yPos,
                 this.width,
-                Math.PI*(0.00+this.counter),// start angle,
-                Math.PI*1.95,// end angle
+                this.startAngle+this.counter,
+                this.endAngle+this.counter,// end angle
                 false
         );
+//        mainContext.rotate(90);
         mainContext.stroke();
         mainContext.closePath();
     }
@@ -90,8 +96,8 @@
                 150,
                 150,
                 105,
-                Math.PI*0.00,// start angle,
-                Math.PI*1.95,// end angle
+                Math.PI*0.00,// start angle = 3.141592653589793
+                Math.PI*1.95,// end angle  = 6.283185307179586
                 false
         );
 
@@ -105,10 +111,11 @@
 
 
     function createCircles(){
-        var orbit1 = new Circle(150);
-        var orbit2 = new Circle(350);
+        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5); // 12 o clock start
+        var orbit2 = new Circle(350, Math.PI*1.45,Math.PI*1.5);
         orbits.push(orbit1, orbit2);
         console.log(orbits.length);
+        console.log("Pi * 0.5= "+Math.PI*0.5+" Pi*1 = "+Math.PI*1.0+"+Math.PI*1.5 = "+Math.PI*1.4+" Math.PI*2.0 = "+Math.PI*2);
         draw();
     }
 
@@ -133,6 +140,17 @@
     * end angle = Math.PI*2 : however 360 also works
     * , to achieve effect of chunk missing from arc, you can do Math.PI*2
     * initial param can also be wrttien Math.PI*0,Math.PI*1.95
+    * */
+
+
+    /*
+
+
+     12 o clock = PI*1.5 = 4.39822971502571
+     3 o clock = Math.PI*2.0 = 6.283185307179586 || Math.PI
+     6 o clock = Pi * 0.5 = 1.5707963267948966
+     9 o clock Pi*1 = 3.141592653589793+Math.
+    *
     * */
 
 </script>
