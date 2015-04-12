@@ -36,6 +36,7 @@
 
     var mainCanvas = document.getElementById("myCanvas");
     var mainContext = mainCanvas.getContext('2d');
+    mainContext.strokeStyle = 'rgb(0,153,255)'; // circles to have same stroke stlye for now
     // this is an 'access API call'
 
 //    mainContext.globalCompositeOperation = 'destination-in';
@@ -52,7 +53,37 @@
 
     }
 
-    function circle(){
+    function Circle(xPos){
+        this.yPos = 150; // hardcoded because of canvas size
+        this.width = 105; // hardcoded param
+        this.counter = 0; // counter is an internal value that we can use to modulate other params
+
+        this.xPos = xPos;
+    }
+
+    Circle.prototype.draw = function(){
+        // abstracting the canvas rendering methods into this function
+
+        this.counter += 0.05;
+
+        var startAngle;
+        var endAngle;
+
+        mainContext.beginPath();
+        mainContext.arc(
+                this.xPos,
+                this.yPos,
+                this.width,
+                Math.PI*(0.00+this.counter),// start angle,
+                Math.PI*1.95,// end angle
+                false
+        );
+        mainContext.stroke();
+        mainContext.closePath();
+    }
+
+    function circleTest(){
+        // will render a simple circle fitting the canvas with a chunk of its stroke missing
         mainContext.clearRect(0,0,600,300);
         mainContext.beginPath();
         mainContext.arc(
@@ -63,61 +94,38 @@
                 Math.PI*1.95,// end angle
                 false
         );
-        mainContext.strokeStyle = 'rgba(0,153,255,0.4)';
-//        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
-//        mainContext.fill();
+
         mainContext.stroke();
         mainContext.closePath();
+
+    }
+    createCircles();
+//    circleTest();
+//    draw();
+
+
+    function createCircles(){
+        var orbit1 = new Circle(150);
+        var orbit2 = new Circle(350);
+        orbits.push(orbit1, orbit2);
+        console.log(orbits.length);
+        draw();
     }
 
-    function nugget(){
+    function draw(){
+        // function that calls itself, triggering animation
         mainContext.clearRect(0,0,600,300);
-        mainContext.beginPath();
-        mainContext.arc(
-                450,
-                150,
-                105,
-                Math.PI*0.90,// start angle,
-                Math.PI*1.05,// end angle
-                false
-        );
-        mainContext.strokeStyle = 'rgba(49, 255, 80, 0.4)';
-//        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
-//        mainContext.fill();
-        mainContext.stroke();
-        mainContext.closePath();
-    }
-
-    function drawPacman() {
-        // function that tries to draw an arc that constantly has a space missing
-        // seems to stall and chew up memory
-//        console.log(typeof(Math.PI*0.95));
-        for(var i = 0; i <= 2; i+=.05){
-//            console.log(Math.PI*i);
-            mainContext.clearRect(0,0,600,300);
-            mainContext.beginPath();
-            mainContext.arc(
-                150,
-                150,
-                105,
-//                Math.PI*0.05,// start angle,
-//                Math.PI*1.95,// end angle
-                Math.PI*(0),// start angle,
-                Math.PI*(0+i),// end angle
-                false
-            );
-            mainContext.strokeStyle = 'rgb(0,153,255)';
-    //        mainContext.fillStyle = 'rgba(0,0,0,0.4)';
-    //        mainContext.fill();
-            mainContext.stroke();
-            mainContext.closePath();
+        // insert x axis movement loop here
+//        for(each in all Circles){
+//            each.Circle.draw();
+//        }
+        for(i = 0; i < orbits.length; i++){
+            var theOrbit = orbits[i];
+            theOrbit.draw();
+//            console.log(i);
         }
-//        requestAnimationFrame(drawPacman);
-
+        requestAnimationFrame(draw);
     }
-    circle();
-    nugget();
-//    drawPacman();
 
     /* I want to draw an arc that creates the line outline of a circle
     * convention for this is that the params for arc:
