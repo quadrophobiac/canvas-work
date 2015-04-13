@@ -27,7 +27,7 @@
     </div>
 
     <script>
-
+        var time = new Date();
         var mainCanvas = document.getElementById("myCanvas");
         var mainContext = mainCanvas.getContext('2d');
         // this is an 'access API call'
@@ -108,7 +108,8 @@
 
         }
         function draw(){
-
+//            console.log("~");
+//            console.log(time.getSeconds());
             mainContext.clearRect(0,0,500,500);
 
             for(var i = 0; i < circles.length; i++){
