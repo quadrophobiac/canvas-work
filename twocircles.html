@@ -25,7 +25,7 @@
 
 </head>
 <body>
-
+<h1 id="frame_count"></h1>
 <div id="container">
     <canvas id="myCanvas" width="600" height="300">
 
@@ -35,8 +35,17 @@
 <script>
 
 
+    // variables for tracking the time elapsed between orbits
+    var now;
+    var then;
+    var interval;
+    var delta;
+    var frameCounter;
+    var frameInterval;
+    var first;
 
-    var time = new Date();
+
+
     var mainCanvas = document.getElementById("myCanvas");
     var mainContext = mainCanvas.getContext('2d');
 //    mainContext.strokeStyle = 'lightgreen'; // circles to have same stroke stlye for now
@@ -130,12 +139,30 @@
     }
 
     function draw(){
+
+
         // function that calls itself, triggering animation
         mainContext.clearRect(0,0,600,300);
         // insert x axis movement loop here
 //        for(each in all Circles){
 //            each.Circle.draw();
 //        }
+        now = Date.now();
+        delta = now - then;
+        //console.log(delta);
+
+        if (delta > interval) {
+            // update time stuffs
+
+            then = now - (delta % interval);
+
+            // ... Code for Drawing the Frame ...
+            var time_el = (then - first)/1000;
+//            $('#frame_count').innerHTML = parseInt(time_el) + 's = '; // just display seconds
+
+            $('#frame_count').innerHTML =
+                    ++frameCounter + 'f / ' + parseInt(time_el) + 's = ';
+
         for(i = 0; i < orbits.length; i++){
             var theOrbit = orbits[i];
 //            console.log(theOrbit);

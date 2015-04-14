@@ -57,10 +57,10 @@
     var $ = document.querySelector.bind(document);
 
 
-    var fps = 60;
+    var fps = 30;
     var now;
     var then = Date.now();
-    var interval = 1000/fps;
+    var interval = 6;
     var delta;
 
     // For this demo
@@ -85,7 +85,9 @@
             var time_el = (then - first)/1000;
 //            $('#frame_count').innerHTML = parseInt(time_el) + 's = '; // just display seconds
 
-            $('#frame_count').innerHTML = ++frameCounter + 'f / ' + parseInt(time_el) + 's = ' + parseInt(frameCounter/time_el) + 'fps';
+            $('#frame_count').innerHTML =
+                    ++frameCounter + 'f / ' + parseInt(time_el) + 's = '
+                    + parseInt(frameCounter/time_el) + 'fps';
         }
     }
 
