@@ -21,15 +21,39 @@
             color: rgb(49, 255, 80);
         }
 
+        table {
+            height: 0;
+            line-height: 0;
+            padding-top: 0;
+            padding-bottom: 10px;
+            margin-left: 3px;
+            margin-right: 3px;
+            color: #180506;
+            /*border: none;*/
+            white-space: nowrap;
+        }
+
     </style>
 
 </head>
 <body>
 <h1 id="frame_count"></h1>
+
 <div id="container">
-    <canvas id="myCanvas" width="600" height="300">
+    <canvas id="myCanvas" width="900" height="300">
 
     </canvas>
+    <!--<span><p id="rotation"></p><p id="rotat">Tet</p></span>-->
+    <table>
+        <tr style="white-space: nowrap;">
+            <td>circle 1: </td>
+            <td id="circle1"></td>
+            <td>circle 2: </td>
+            <td id="circle2"></td>
+            <td>circle 3: </td>
+            <td id="circle3"></td>
+        </tr>
+    </table>
 </div>
 
 <script>
@@ -37,12 +61,11 @@
 
     // variables for tracking the time elapsed between orbits
     var now;
-    var then;
-    var interval;
+    var then = Date.now();
     var delta;
-    var frameCounter;
-    var frameInterval;
-    var first;
+    var frameCounter = 0;
+    var frameInterval = 60;
+    var first = then;
 
 
 
@@ -50,13 +73,12 @@
     var mainContext = mainCanvas.getContext('2d');
 //    mainContext.strokeStyle = 'lightgreen'; // circles to have same stroke stlye for now
     // this is an 'access API call'
-    mainContext.scale(0.4,0.4);
-    mainContext.rotate(-Math.PI/2);
-    mainContext.setTransform(1, 0, 0, 1, 0, 0);
-    mainContext.lineWidth = 5;
+
+    ;
 //    mainContext.globalCompositeOperation = 'destination-in';
 
     var orbits = new Array();
+    var $ = document.querySelector.bind(document);
 
     var requestAnimationFrame = window.requestAnimationFrame ||
             window.mozRequestAnimationFrame ||
@@ -68,7 +90,7 @@
 
     }
 
-    function Circle(xPos, startAngle, endAngle, color, speed){
+    function Circle(xPos, startAngle, endAngle, color, speed, name, stroke){
         this.yPos = 150; // hardcoded because of canvas size
         this.width = 105; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
@@ -77,21 +99,15 @@
         this.xPos = xPos;
         this.color = color || 'lightgreen';
         this.speed = speed || 0.05;
+        this.name = name;
+        this.stroke = stroke || 5;
     }
 
     Circle.prototype.draw = function(){
         // abstracting the canvas rendering methods into this function
         // can either pass speed as a param for this function, or include it as a property of each circle
-
-//        if(speed){
-////            console.log("speed param passed");
-//        } else {
-////            console.log("default increment speed being used");
-//
-//        }
-//        var startAngle;
-//        var endAngle;
         this.counter += this.speed;
+        mainContext.lineWidth = this.stroke;
         mainContext.strokeStyle = this.color;
         mainContext.beginPath();
         mainContext.arc(
@@ -105,11 +121,15 @@
 //        mainContext.rotate(90);
         mainContext.stroke();
         mainContext.closePath();
+//        console.log($('#'+this.name)); // evaluates fine
+        $('#'+this.name).innerHTML =
+                this.counter.toPrecision(3) + ' rf ';
+//        console.log("circle"+this.name+" passed");
     }
 
     function circleTest(){
         // will render a simple circle fitting the canvas with a chunk of its stroke missing
-        mainContext.clearRect(0,0,600,300);
+        mainContext.clearRect(0,0,900,300);
         mainContext.beginPath();
         mainContext.arc(
                 150,
@@ -124,50 +144,45 @@
         mainContext.closePath();
 
     }
+
     createCircles();
 //    circleTest();
 //    draw();
 
 
     function createCircles(){
-        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.05); // 12 o clock start
-        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.0005);
-        orbits.push(orbit1, orbit2);
+        // 6.28 = makes the circle move anti clockwise
+        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.05, 'circle1'); // 12 o clock start
+        // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
+        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.209333333, 'circle2');
+        var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
+        orbits.push(orbit1, orbit2, orbit3);
         console.log(orbits.length);
         console.log("Pi * 0.5= "+Math.PI*0.5+" Pi*1 = "+Math.PI*1.0+"+Math.PI*1.5 = "+Math.PI*1.4+" Math.PI*2.0 = "+Math.PI*2);
         draw();
     }
 
     function draw(){
-
-
         // function that calls itself, triggering animation
         mainContext.clearRect(0,0,600,300);
-        // insert x axis movement loop here
-//        for(each in all Circles){
-//            each.Circle.draw();
-//        }
+
+        // time tracker logic
         now = Date.now();
         delta = now - then;
-        //console.log(delta);
-
-        if (delta > interval) {
+        if (delta > frameInterval) {
             // update time stuffs
-
-            then = now - (delta % interval);
-
+            then = now - (delta % frameInterval);
             // ... Code for Drawing the Frame ...
-            var time_el = (then - first)/1000;
-//            $('#frame_count').innerHTML = parseInt(time_el) + 's = '; // just display seconds
-
+            var time_el = (then - first) / 1000;
+            // update a table that displays one circle per cell
             $('#frame_count').innerHTML =
                     ++frameCounter + 'f / ' + parseInt(time_el) + 's = ';
-
+        }
+        // draw the circular orbits
         for(i = 0; i < orbits.length; i++){
             var theOrbit = orbits[i];
-//            console.log(theOrbit);
+            // console.log(theOrbit);
             theOrbit.draw();
-//            console.log(i);
         }
         requestAnimationFrame(draw);
         // accurate to the thousandth of millisecond
@@ -192,6 +207,11 @@
     *
     * */
 
+    /* Possible refresh rates
+   50 hz = upper limit of visually discernable
+   0.0 - Math.PI*1.99 = range which completes a circle
+   Math.PI*1.99 = 6.28^^^^ - Pi can extend to however many decimal places desired
+    */
 </script>
 
 </body>

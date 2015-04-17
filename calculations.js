@@ -10,3 +10,4 @@ console.log(((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilli
 // between
 console.log("current time in seconds: ");
 console.log(time.getMilliseconds());
+console.log(Math.PI*1.99999999999999999999999999999999999999999999999999999999);
