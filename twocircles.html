@@ -141,12 +141,12 @@
 //        console.log("circle"+this.name+" passed");
     }
 
-    function circleTest(){
+    function circleTest(context){
         // will render a simple circle fitting the canvas with a chunk of its stroke missing
-        baseContext.clearRect(0,0,900,300);
-        baseContext.lineWidth = 2;
-        baseContext.strokeStyle = 'rgba(204, 45, 42, 0.20)';
-        baseContext.arc(
+        context.clearRect(0,0,900,300);
+        context.lineWidth = 2;
+        context.strokeStyle = 'rgba(204, 45, 42, 0.20)';
+        context.arc(
                 400,
                 150,
                 105,
@@ -155,11 +155,11 @@
                 false
         );
 
-        baseContext.stroke();
-        baseContext.closePath();
+        context.stroke();
+        context.closePath();
 
     }
-    circleTest();
+    circleTest(baseContext);
     createCircles();
 
 //    draw();
