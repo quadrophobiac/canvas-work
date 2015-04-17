@@ -8,9 +8,20 @@
             margin: 0px;
             padding: 0px;
         }
-        #myCanvas {
+        canvas { position: absolute; }
+
+        #BaseCanvas {
+            z-index: 1;
+            top: 0;
             border: 1px #CCC solid;
             background-color: rgba(158, 167, 184, 0.2);
+        }
+
+        #CircleCanvas {
+            z-index: 2;
+            top: 0;
+            border: 1px #CCC solid;
+            background-color: rgba(204, 45, 42, 0.20);
         }
 
         #staticCircle{
@@ -22,6 +33,8 @@
         }
 
         table {
+            position: absolute;
+            bottom: 10%;
             height: 0;
             line-height: 0;
             padding-top: 0;
@@ -40,7 +53,10 @@
 <h1 id="frame_count"></h1>
 
 <div id="container">
-    <canvas id="myCanvas" width="900" height="300">
+    <canvas id="CircleCanvas" width="900" height="300">
+
+    </canvas>
+    <canvas id="BaseCanvas" width="900" height="300">
 
     </canvas>
     <!--<span><p id="rotation"></p><p id="rotat">Tet</p></span>-->
@@ -68,14 +84,12 @@
     var first = then;
 
 
+    var baseCanvas = document.getElementById("BaseCanvas");
+    var baseContext = baseCanvas.getContext('2d');
 
-    var mainCanvas = document.getElementById("myCanvas");
+    var mainCanvas = document.getElementById("CircleCanvas");
     var mainContext = mainCanvas.getContext('2d');
-//    mainContext.strokeStyle = 'lightgreen'; // circles to have same stroke stlye for now
-    // this is an 'access API call'
 
-    ;
-//    mainContext.globalCompositeOperation = 'destination-in';
 
     var orbits = new Array();
     var $ = document.querySelector.bind(document);
@@ -129,24 +143,25 @@
 
     function circleTest(){
         // will render a simple circle fitting the canvas with a chunk of its stroke missing
-        mainContext.clearRect(0,0,900,300);
-        mainContext.beginPath();
-        mainContext.arc(
-                150,
+        baseContext.clearRect(0,0,900,300);
+        baseContext.lineWidth = 2;
+        baseContext.strokeStyle = 'rgba(204, 45, 42, 0.20)';
+        baseContext.arc(
+                400,
                 150,
                 105,
                 Math.PI*0.00,// start angle = 3.141592653589793
-                Math.PI*1.95,// end angle  = 6.283185307179586
+                Math.PI*1.999999,// end angle  = 6.283185307179586
                 false
         );
 
-        mainContext.stroke();
-        mainContext.closePath();
+        baseContext.stroke();
+        baseContext.closePath();
 
     }
-
+    circleTest();
     createCircles();
-//    circleTest();
+
 //    draw();
 
 
@@ -154,7 +169,7 @@
         // 6.28 = makes the circle move anti clockwise
         var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.05, 'circle1'); // 12 o clock start
         // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
-        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.209333333, 'circle2');
+        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2');
         var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
         orbits.push(orbit1, orbit2, orbit3);
         console.log(orbits.length);
@@ -163,8 +178,9 @@
     }
 
     function draw(){
+
         // function that calls itself, triggering animation
-        mainContext.clearRect(0,0,600,300);
+        mainContext.clearRect(0,0,900,300);
 
         // time tracker logic
         now = Date.now();
