@@ -14,7 +14,8 @@
             z-index: 1;
             top: 0;
             border: 1px #CCC solid;
-            background-color: rgba(158, 167, 184, 0.2);
+            /*background-color: rgba(158, 167, 184, 0.2);*/
+            background-color: rgb(14, 3, 3);
         }
 
         #CircleCanvas {
@@ -50,13 +51,13 @@
 
 </head>
 <body>
-<h1 id="frame_count"></h1>
+<h1 id="frame_count" style="color: #FFF;"></h1>
 
 <div id="container">
-    <canvas id="CircleCanvas" width="900" height="300">
+    <canvas id="CircleCanvas" width="650" height="650">
 
     </canvas>
-    <canvas id="BaseCanvas" width="900" height="300">
+    <canvas id="BaseCanvas" width="650" height="650">
 
     </canvas>
     <!--<span><p id="rotation"></p><p id="rotat">Tet</p></span>-->
@@ -83,17 +84,18 @@
     var frameInterval = 60;
     var first = then;
 
-
+    // bg layer ~ render static circles here
     var baseCanvas = document.getElementById("BaseCanvas");
     var baseContext = baseCanvas.getContext('2d');
-
+    // orbits layer
     var mainCanvas = document.getElementById("CircleCanvas");
     var mainContext = mainCanvas.getContext('2d');
 
 
     var orbits = new Array();
-    var $ = document.querySelector.bind(document);
+    var grid = 9;
 
+    var $ = document.querySelector.bind(document);
     var requestAnimationFrame = window.requestAnimationFrame ||
             window.mozRequestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -105,11 +107,11 @@
     }
 
     function Circle(xPos, startAngle, endAngle, color, speed, name, stroke){
-        this.yPos = 150; // hardcoded because of canvas size
+        this.yPos = 109; // hardcoded because of canvas size
         this.width = 105; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
-        this.startAngle = startAngle+0.05;
-        this.endAngle = endAngle-0.05;
+        this.startAngle = startAngle+0.06;
+        this.endAngle = endAngle-0.06;
         this.xPos = xPos;
         this.color = color || 'lightgreen';
         this.speed = speed || 0.05;
@@ -122,6 +124,7 @@
         // can either pass speed as a param for this function, or include it as a property of each circle
         this.counter += this.speed;
         mainContext.lineWidth = this.stroke;
+        mainContext.lineCap = 'round';
         mainContext.strokeStyle = this.color;
         mainContext.beginPath();
         mainContext.arc(
@@ -141,14 +144,26 @@
 //        console.log("circle"+this.name+" passed");
     }
 
-    function circleTest(context){
+    function bgOrbits(context){
         // will render a simple circle fitting the canvas with a chunk of its stroke missing
-        context.clearRect(0,0,900,300);
+//        context.clearRect(0,0,900,300);
+        context.beginPath();
         context.lineWidth = 2;
         context.strokeStyle = 'rgba(204, 45, 42, 0.20)';
         context.arc(
-                400,
                 150,
+                109,
+                105,
+                Math.PI*0.00,// start angle = 3.141592653589793
+                Math.PI*1.999999,// end angle  = 6.283185307179586
+                false
+        );
+        context.stroke();
+        context.closePath();
+        context.beginPath();
+        context.arc(
+                400,
+                109,
                 105,
                 Math.PI*0.00,// start angle = 3.141592653589793
                 Math.PI*1.999999,// end angle  = 6.283185307179586
@@ -158,17 +173,22 @@
         context.closePath();
 
     }
-    circleTest(baseContext);
+    bgOrbits(baseContext);
     createCircles();
 
 //    draw();
 
 
     function createCircles(){
+        // 0.104666667 = top speed, AKA 1:: Math.Pi * 1.99^^^ / 60
+
+
         // 6.28 = makes the circle move anti clockwise
-        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.05, 'circle1'); // 12 o clock start
+//        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.104666667, 'circle1'); // 12 o clock start - fill
+        var orbit1 = new Circle(150,Math.PI*1.45,Math.PI*1.5, 'rgb(49, 255, 80)', 0.004341506514335894, 'circle1', 6);
+
         // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
-        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2');
+        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2', 6);
         var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
         orbits.push(orbit1, orbit2, orbit3);
         console.log(orbits.length);
