@@ -121,129 +121,20 @@
 
     var plots = new Array();
 
-    function Circle(xPos, startAngle, endAngle, color, speed, name, stroke){
-        this.yPos = 109; // hardcoded because of canvas size
-        this.width = 105; // hardcoded param
+    function Circle(xPos, yPos, width, startAngle, endAngle, color, speed, name, stroke){
+        console.log(arguments);
+        this.yPos = yPos; // hardcoded because of canvas size
+        this.width = width; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
         this.startAngle = startAngle+0.06;
         this.endAngle = endAngle-0.06;
         this.xPos = xPos;
         this.color = color || 'lightgreen';
         this.speed = speed || 0.05;
-        this.name = name;
+        this.name = name || 'orphan';
         this.stroke = stroke || 5;
     }
 
-    var gridCalc = function(dim, grid, context, plots, colours){
-        // dim assumes that a square space is to be plotted
-        console.log(typeof(plots));
-        var ctx = context;
-        var gridRows = Math.sqrt(grid);
-        var centre = (dim/gridRows)/2;
-        var counter = 0; // internal measure
-
-        for(i = 0; i < gridRows; i++){
-            for(j = 0; j < gridRows; j++){
-                ctx.beginPath();
-                var x = centre+j*(2*centre);
-                var y = centre+i*(2*centre);
-                var radius = centre/1.075; // range between 1.075 - 1.250, increments of .NNN ^ -2 [half it each time]
-                var startAngle = 0;
-                var endAngle = Math.PI*2;
-                var clockWise =  false;
-                ctx.strokeStyle = colours[counter];
-                ctx.arc(x,y,radius,startAngle,endAngle, clockWise);
-                ctx.stroke();
-                plots.push({
-                    'x': x,
-                    'y': y,
-                    'width': radius,
-                    'color': colours[counter]
-                });
-                counter++;
-            }
-        }
-        return plots;
-    };
-
-    function bgOrbits(context){
-        // will render a simple circle fitting the canvas with a chunk of its stroke missing
-//        context.clearRect(0,0,900,300);
-        context.beginPath();
-        context.lineWidth = 2;
-        context.strokeStyle = 'rgba(204, 45, 42, 0.20)';
-        context.arc(
-                150,
-                109,
-                105,
-                Math.PI*0.00,// start angle = 3.141592653589793
-                Math.PI*1.999999,// end angle  = 6.283185307179586
-                false
-        );
-        context.stroke();
-        context.closePath();
-        context.beginPath();
-        context.arc(
-                400,
-                109,
-                105,
-                Math.PI*0.00,// start angle = 3.141592653589793
-                Math.PI*1.999999,// end angle  = 6.283185307179586
-                false
-        );
-        context.stroke();
-        context.closePath();
-
-    }
-//    bgOrbits(baseContext);
-    gridCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
-    createCircles();
-
-
-
-    function createCircles(){
-        // 0.104666667 = top speed, AKA 1:: Math.Pi * 1.99^^^ / 60
-
-
-        // 6.28 = makes the circle move anti clockwise
-//        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.104666667, 'circle1'); // 12 o clock start - fill
-        var orbit1 = new Circle(150,Math.PI*1.45,Math.PI*1.5, 'rgb(49, 255, 80)', 0.004341506514335894, 'circle1', 6);
-
-        // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
-        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2', 6);
-        var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
-        orbits.push(orbit1, orbit2, orbit3);
-        console.log(orbits.length);
-        console.log("Pi * 0.5= "+Math.PI*0.5+" Pi*1 = "+Math.PI*1.0+"+Math.PI*1.5 = "+Math.PI*1.4+" Math.PI*2.0 = "+Math.PI*2);
-        draw();
-    }
-
-    function draw(){
-
-        // function that calls itself, triggering animation
-        mainContext.clearRect(0,0,900,300);
-
-        // time tracker logic
-        now = Date.now();
-        delta = now - then;
-        if (delta > frameInterval) {
-            // update time stuffs
-            then = now - (delta % frameInterval);
-            // ... Code for Drawing the Frame ...
-            var time_el = (then - first) / 1000;
-            // update a table that displays one circle per cell
-            $('#frame_count').innerHTML =
-                    ++frameCounter + 'f / ' + parseInt(time_el) + 's = ';
-        }
-        // draw the circular orbits
-        for(i = 0; i < orbits.length; i++){
-            var theOrbit = orbits[i];
-            // console.log(theOrbit);
-            theOrbit.draw();
-        }
-        requestAnimationFrame(draw);
-        // accurate to the thousandth of millisecond
-    }
 
     Circle.prototype.draw = function(){
         // abstracting the canvas rendering methods into this function
@@ -265,10 +156,100 @@
         mainContext.stroke();
         mainContext.closePath();
 //        console.log($('#'+this.name)); // evaluates fine
-        $('#'+this.name).innerHTML =
-                this.counter.toPrecision(3) + ' rf ';
+//        $('#'+this.name).innerHTML =
+//                this.counter.toPrecision(3) + ' rf ';
 //        console.log("circle"+this.name+" passed");
     }
+
+    var gridCalc = function(dim, grid, context, plots, colours){
+        // dim assumes that a square space is to be plotted
+        console.log(typeof(plots));
+        var ctx = context;
+        var gridRows = Math.sqrt(grid);
+        var centre = (dim/gridRows)/2;
+        var counter = 0; // internal measure
+
+        for(i = 0; i < gridRows; i++){
+            for(j = 0; j < gridRows; j++){
+                ctx.beginPath();
+                var x = centre+j*(2*centre);
+                var y = centre+i*(2*centre);
+                var radius = centre/1.075; // range between 1.075 - 1.250, increments of .NNN ^ -2 [half it each time]
+                var startAngle = 0;
+                var endAngle = Math.PI*2;
+                var clockWise =  false;
+                ctx.strokeStyle = 'rgba(204, 45, 42, 0.20)';
+                ctx.arc(x,y,radius,startAngle,endAngle, clockWise);
+                ctx.stroke();
+                plots.push({
+                    'x': x,
+                    'y': y,
+                    'width': radius,
+                    'color': colours[counter]
+                });
+                counter++;
+            }
+        }
+        return plots;
+    };
+
+    gridCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
+    createCircles(plots);
+
+
+
+    function createCircles(plots){
+        console.log(plots);
+        // 0.104666667 = top speed, AKA 1:: Math.Pi * 1.99^^^ / 60
+        for(i = 0; i < plots.length; i++){
+            console.log("args: "+plots[i].x+" , "+plots[i].y+", "+plots[i].width);
+            orbits.push(new Circle(
+                    plots[i].x,plots[i].y,plots[i].width,Math.PI*1.45,Math.PI*1.5,plots[i].color,0.004341506514335894
+            ));
+        }
+        console.log(orbits);
+
+        // 6.28 = makes the circle move anti clockwise
+//        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.104666667, 'circle1'); // 12 o clock start - fill
+//        var orbit1 = new Circle(150,Math.PI*1.45,Math.PI*1.5, 'rgb(49, 255, 80)', 0.004341506514335894, 'circle1', 6);
+//
+//        // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
+//        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2', 6);
+//        var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
+//        orbits.push(orbit1, orbit2, orbit3);
+
+        draw();
+    }
+
+    function draw(){
+
+        // function that calls itself, triggering animation
+        mainContext.clearRect(0,0,650,650);
+
+        // time tracker logic
+        now = Date.now();
+        delta = now - then;
+        if (delta > frameInterval) {
+            // update time stuffs
+            then = now - (delta % frameInterval);
+            // ... Code for Drawing the Frame ...
+            var time_el = (then - first) / 1000;
+            // update a table that displays one circle per cell
+            $('#frame_count').innerHTML =
+                    ++frameCounter + 'f / ' + parseInt(time_el) + 's = ';
+        }
+        // draw the circular orbits
+//        console.log(orbits);
+        for(i = 0; i < orbits.length; i++){
+            var theOrbit = orbits[i];
+            // console.log(theOrbit);
+            theOrbit.draw();
+        }
+        requestAnimationFrame(draw);
+        // accurate to the thousandth of millisecond
+    }
+
+
 
 
 
