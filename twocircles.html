@@ -75,6 +75,22 @@
 
 <script>
 
+    var colors = new Array(
+            // using websafe for time being
+            '#0000FF',
+            "#00FF00",
+            "#9900FF",
+            "#CC6600",
+            "#FF0000",
+            "#FFFF00",
+            "#FF0099",
+            "#CC0066",
+            "#000066",
+            "#33FF99",
+            "#FF6600",
+            "#FF0099",
+            "#FFFFFF"
+    );
 
     // variables for tracking the time elapsed between orbits
     var now;
@@ -102,9 +118,8 @@
             window.msRequestAnimationFrame;
     // above must be fallbacks dependant on which browser will be used
 
-    function orbit() {
 
-    }
+    var plots = new Array();
 
     function Circle(xPos, startAngle, endAngle, color, speed, name, stroke){
         this.yPos = 109; // hardcoded because of canvas size
@@ -119,30 +134,37 @@
         this.stroke = stroke || 5;
     }
 
-    Circle.prototype.draw = function(){
-        // abstracting the canvas rendering methods into this function
-        // can either pass speed as a param for this function, or include it as a property of each circle
-        this.counter += this.speed;
-        mainContext.lineWidth = this.stroke;
-        mainContext.lineCap = 'round';
-        mainContext.strokeStyle = this.color;
-        mainContext.beginPath();
-        mainContext.arc(
-                this.xPos,
-                this.yPos,
-                this.width,
-                this.startAngle+this.counter,
-                this.endAngle+this.counter,// end angle
-                false
-        );
-//        mainContext.rotate(90);
-        mainContext.stroke();
-        mainContext.closePath();
-//        console.log($('#'+this.name)); // evaluates fine
-        $('#'+this.name).innerHTML =
-                this.counter.toPrecision(3) + ' rf ';
-//        console.log("circle"+this.name+" passed");
-    }
+    var gridCalc = function(dim, grid, context, plots, colours){
+        // dim assumes that a square space is to be plotted
+        console.log(typeof(plots));
+        var ctx = context;
+        var gridRows = Math.sqrt(grid);
+        var centre = (dim/gridRows)/2;
+        var counter = 0; // internal measure
+
+        for(i = 0; i < gridRows; i++){
+            for(j = 0; j < gridRows; j++){
+                ctx.beginPath();
+                var x = centre+j*(2*centre);
+                var y = centre+i*(2*centre);
+                var radius = centre/1.075; // range between 1.075 - 1.250, increments of .NNN ^ -2 [half it each time]
+                var startAngle = 0;
+                var endAngle = Math.PI*2;
+                var clockWise =  false;
+                ctx.strokeStyle = colours[counter];
+                ctx.arc(x,y,radius,startAngle,endAngle, clockWise);
+                ctx.stroke();
+                plots.push({
+                    'x': x,
+                    'y': y,
+                    'width': radius,
+                    'color': colours[counter]
+                });
+                counter++;
+            }
+        }
+        return plots;
+    };
 
     function bgOrbits(context){
         // will render a simple circle fitting the canvas with a chunk of its stroke missing
@@ -173,10 +195,10 @@
         context.closePath();
 
     }
-    bgOrbits(baseContext);
+//    bgOrbits(baseContext);
+    gridCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
     createCircles();
 
-//    draw();
 
 
     function createCircles(){
@@ -222,6 +244,33 @@
         requestAnimationFrame(draw);
         // accurate to the thousandth of millisecond
     }
+
+    Circle.prototype.draw = function(){
+        // abstracting the canvas rendering methods into this function
+        // can either pass speed as a param for this function, or include it as a property of each circle
+        this.counter += this.speed;
+        mainContext.lineWidth = this.stroke;
+        mainContext.lineCap = 'round';
+        mainContext.strokeStyle = this.color;
+        mainContext.beginPath();
+        mainContext.arc(
+                this.xPos,
+                this.yPos,
+                this.width,
+                this.startAngle+this.counter,
+                this.endAngle+this.counter,// end angle
+                false
+        );
+//        mainContext.rotate(90);
+        mainContext.stroke();
+        mainContext.closePath();
+//        console.log($('#'+this.name)); // evaluates fine
+        $('#'+this.name).innerHTML =
+                this.counter.toPrecision(3) + ' rf ';
+//        console.log("circle"+this.name+" passed");
+    }
+
+
 
     /* I want to draw an arc that creates the line outline of a circle
     * convention for this is that the params for arc:
