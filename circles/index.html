@@ -75,6 +75,13 @@
 
 <script>
 
+    var $ = document.querySelector.bind(document);
+    var requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+    // above must be fallbacks dependant on which browser will be used
+
     var colors = new Array(
             // using websafe for time being
             '#0000FF',
@@ -108,18 +115,15 @@
     var mainContext = mainCanvas.getContext('2d');
 
 
-    var orbits = new Array();
+    var orbits = new Array(); // stores Objects that representing moving orbiting planet
+    var plots = new Array(); // stores the grid points which arcs and orbits trace their radius from
+    var rotationPeriods = new Array(); // array of floats, stores the scale to be mapped to orbits
     var grid = 9;
 
-    var $ = document.querySelector.bind(document);
-    var requestAnimationFrame = window.requestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.msRequestAnimationFrame;
-    // above must be fallbacks dependant on which browser will be used
+    for(i = 0; i < grid; i++){
+        rotationPeriods.push((0.004341506514335894*((Math.random() * 24) + 1)));
+    }
 
-
-    var plots = new Array();
 
     function Orbit(plots,startAngle, endAngle, speed, name, stroke){
         console.log(arguments);
@@ -152,7 +156,6 @@
                 this.endAngle+this.counter,// end angle
                 false
         );
-//        mainContext.rotate(90);
         mainContext.stroke();
         mainContext.closePath();
 //      uncomment below to show the fps of each orbit
@@ -161,7 +164,7 @@
 //        console.log("Orbit"+this.name+" passed");
     }
 
-    var gridCalc = function(dim, grid, context, plots, colours){
+    var gridArcCalc = function(dim, grid, context, plots, colours){
         // dim assumes that a square space is to be plotted
         console.log(typeof(plots));
         var ctx = context;
@@ -194,16 +197,17 @@
         return plots;
     };
 
-    gridCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
-    createBgArcs(plots);
+    gridArcCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
+    createOrbits(plots,rotationPeriods);
 
-    function createBgArcs(plots){
+    function createOrbits(plots, rotationPeriods){
         console.log(plots);
         // 0.104666667 = top speed, AKA 1:: Math.Pi * 1.99^^^ / 60
         for(i = 0; i < plots.length; i++){
             console.log("args: "+plots[i].x+" , "+plots[i].y+", "+plots[i].width);
             orbits.push(new Orbit(
-                    plots[i],Math.PI*1.45,Math.PI*1.5,0.004341506514335894
+                    plots[i],Math.PI*1.45,Math.PI*1.5,rotationPeriods[i]
+                    // final speed variable works in steps of 24
             ));
         }
         console.log(orbits);

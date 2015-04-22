@@ -23,3 +23,4 @@ var gridCalc = function(dim, grid){
 };
 
 gridCalc(650, 9);
+console.log((Math.random() * 24) + 1);
