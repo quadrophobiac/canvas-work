@@ -121,15 +121,15 @@
 
     var plots = new Array();
 
-    function Orbit(xPos, yPos, width,color,startAngle, endAngle, speed, name, stroke){
+    function Orbit(plots,startAngle, endAngle, speed, name, stroke){
         console.log(arguments);
-        this.yPos = yPos; // hardcoded because of canvas size
-        this.width = width; // hardcoded param
+        this.xPos = plots.x;
+        this.yPos = plots.y; // hardcoded because of canvas size
+        this.width = plots.width; // hardcoded param
         this.counter = 0; // counter is an internal value that we can use to modulate other params
         this.startAngle = startAngle+0.06;
         this.endAngle = endAngle-0.06;
-        this.xPos = xPos;
-        this.color = color || 'lightgreen';
+        this.color = plots.color || 'lightgreen';
         this.speed = speed || 0.05;
         this.name = name || 'orphan';
         this.stroke = stroke || 5;
@@ -203,7 +203,7 @@
         for(i = 0; i < plots.length; i++){
             console.log("args: "+plots[i].x+" , "+plots[i].y+", "+plots[i].width);
             orbits.push(new Orbit(
-                    plots[i].x,plots[i].y,plots[i].width,plots[i].color,Math.PI*1.45,Math.PI*1.5,0.004341506514335894
+                    plots[i],Math.PI*1.45,Math.PI*1.5,0.004341506514335894
             ));
         }
         console.log(orbits);
