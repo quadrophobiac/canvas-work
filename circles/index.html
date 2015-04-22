@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Two Circles in Orbit</title>
+    <title>Two Orbits in Orbit</title>
     <style>
         body{
             margin: 0px;
@@ -18,14 +18,14 @@
             background-color: rgb(14, 3, 3);
         }
 
-        #CircleCanvas {
+        #OrbitCanvas {
             z-index: 2;
             top: 0;
             border: 1px #CCC solid;
             /*background-color: rgba(204, 45, 42, 0.20);*/
         }
 
-        #staticCircle{
+        #staticOrbit{
             color: rgb(0,153,255);
         }
 
@@ -54,7 +54,7 @@
 <h1 id="frame_count" style="color: #FFF;"></h1>
 
 <div id="container">
-    <canvas id="CircleCanvas" width="650" height="650">
+    <canvas id="OrbitCanvas" width="650" height="650">
 
     </canvas>
     <canvas id="BaseCanvas" width="650" height="650">
@@ -63,12 +63,12 @@
     <!--<span><p id="rotation"></p><p id="rotat">Tet</p></span>-->
     <table>
         <tr style="white-space: nowrap;">
-            <td>circle 1: </td>
-            <td id="circle1"></td>
-            <td>circle 2: </td>
-            <td id="circle2"></td>
-            <td>circle 3: </td>
-            <td id="circle3"></td>
+            <td>Orbit 1: </td>
+            <td id="Orbit1"></td>
+            <td>Orbit 2: </td>
+            <td id="Orbit2"></td>
+            <td>Orbit 3: </td>
+            <td id="Orbit3"></td>
         </tr>
     </table>
 </div>
@@ -100,11 +100,11 @@
     var frameInterval = 60;
     var first = then;
 
-    // bg layer ~ render static circles here
+    // bg layer ~ render static Orbits here
     var baseCanvas = document.getElementById("BaseCanvas");
     var baseContext = baseCanvas.getContext('2d');
     // orbits layer
-    var mainCanvas = document.getElementById("CircleCanvas");
+    var mainCanvas = document.getElementById("OrbitCanvas");
     var mainContext = mainCanvas.getContext('2d');
 
 
@@ -121,7 +121,7 @@
 
     var plots = new Array();
 
-    function Circle(xPos, yPos, width, startAngle, endAngle, color, speed, name, stroke){
+    function Orbit(xPos, yPos, width,color,startAngle, endAngle, speed, name, stroke){
         console.log(arguments);
         this.yPos = yPos; // hardcoded because of canvas size
         this.width = width; // hardcoded param
@@ -136,9 +136,9 @@
     }
 
 
-    Circle.prototype.draw = function(){
+    Orbit.prototype.draw = function(){
         // abstracting the canvas rendering methods into this function
-        // can either pass speed as a param for this function, or include it as a property of each circle
+        // can either pass speed as a param for this function, or include it as a property of each Orbit
         this.counter += this.speed;
         mainContext.lineWidth = this.stroke;
         mainContext.lineCap = 'round';
@@ -155,10 +155,10 @@
 //        mainContext.rotate(90);
         mainContext.stroke();
         mainContext.closePath();
-//        console.log($('#'+this.name)); // evaluates fine
+//      uncomment below to show the fps of each orbit
 //        $('#'+this.name).innerHTML =
 //                this.counter.toPrecision(3) + ' rf ';
-//        console.log("circle"+this.name+" passed");
+//        console.log("Orbit"+this.name+" passed");
     }
 
     var gridCalc = function(dim, grid, context, plots, colours){
@@ -178,7 +178,8 @@
                 var startAngle = 0;
                 var endAngle = Math.PI*2;
                 var clockWise =  false;
-                ctx.strokeStyle = 'rgba(204, 45, 42, 0.20)';
+//                ctx.strokeStyle = 'rgba(204, 45, 42, 0.20)';
+                ctx.strokeStyle = 'rgba(204,204,204,0.6)';
                 ctx.arc(x,y,radius,startAngle,endAngle, clockWise);
                 ctx.stroke();
                 plots.push({
@@ -194,28 +195,26 @@
     };
 
     gridCalc(mainCanvas.clientHeight, grid, baseContext, plots, colors);
-    createCircles(plots);
+    createBgArcs(plots);
 
-
-
-    function createCircles(plots){
+    function createBgArcs(plots){
         console.log(plots);
         // 0.104666667 = top speed, AKA 1:: Math.Pi * 1.99^^^ / 60
         for(i = 0; i < plots.length; i++){
             console.log("args: "+plots[i].x+" , "+plots[i].y+", "+plots[i].width);
-            orbits.push(new Circle(
-                    plots[i].x,plots[i].y,plots[i].width,Math.PI*1.45,Math.PI*1.5,plots[i].color,0.004341506514335894
+            orbits.push(new Orbit(
+                    plots[i].x,plots[i].y,plots[i].width,plots[i].color,Math.PI*1.45,Math.PI*1.5,0.004341506514335894
             ));
         }
         console.log(orbits);
 
-        // 6.28 = makes the circle move anti clockwise
-//        var orbit1 = new Circle(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.104666667, 'circle1'); // 12 o clock start - fill
-//        var orbit1 = new Circle(150,Math.PI*1.45,Math.PI*1.5, 'rgb(49, 255, 80)', 0.004341506514335894, 'circle1', 6);
+        // 6.28 = makes the Orbit move anti clockwise
+//        var orbit1 = new Orbit(150,Math.PI*1.5,Math.PI*1.5, 'rgb(49, 255, 80)', 0.104666667, 'Orbit1'); // 12 o clock start - fill
+//        var orbit1 = new Orbit(150,Math.PI*1.45,Math.PI*1.5, 'rgb(49, 255, 80)', 0.004341506514335894, 'Orbit1', 6);
 //
 //        // Math.Pi * 1.99^^^ / 60 = 0.104666667 == 1 second loop
-//        var orbit2 = new Circle(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'circle2', 6);
-//        var orbit3 = new Circle(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'circle3', 2);
+//        var orbit2 = new Orbit(400, Math.PI*1.45,Math.PI*1.5, 'rgb(0,153,255)',0.104666667, 'Orbit2', 6);
+//        var orbit3 = new Orbit(650, 0,Math.PI*1.999999999, 'rgb(0,153,255)',0.000000000001, 'Orbit3', 2);
 //        orbits.push(orbit1, orbit2, orbit3);
 
         draw();
@@ -234,7 +233,7 @@
             then = now - (delta % frameInterval);
             // ... Code for Drawing the Frame ...
             var time_el = (then - first) / 1000;
-            // update a table that displays one circle per cell
+            // update a table that displays one Orbit per cell
             $('#frame_count').innerHTML =
                     ++frameCounter + 'f / ' + parseInt(time_el) + 's = ';
         }
@@ -253,7 +252,7 @@
 
 
 
-    /* I want to draw an arc that creates the line outline of a circle
+    /* I want to draw an arc that creates the line outline of a Orbit
     * convention for this is that the params for arc:
     * start angle = 0
     * end angle = Math.PI*2 : however 360 also works
@@ -274,7 +273,7 @@
 
     /* Possible refresh rates
    50 hz = upper limit of visually discernable
-   0.0 - Math.PI*1.99 = range which completes a circle
+   0.0 - Math.PI*1.99 = range which completes a Orbit
    Math.PI*1.99 = 6.28^^^^ - Pi can extend to however many decimal places desired
     */
 </script>
