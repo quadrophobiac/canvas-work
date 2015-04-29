@@ -117,13 +117,35 @@
 
     var orbits = new Array(); // stores Objects that representing moving orbiting planet
     var plots = new Array(); // stores the grid points which arcs and orbits trace their radius from
+    var planetData = new Array(58.81337, 243.68663, 1, 1.028552, 0.41435, 0.44499, 0.72006, 0.67339, 6.40529);
     var rotationPeriods = new Array(); // array of floats, stores the scale to be mapped to orbits
     var grid = 9;
 
     for(i = 0; i < grid; i++){
-        rotationPeriods.push((0.004341506514335894*((Math.random() * 24) + 1)));
+        rotationPeriods.push((((Math.random() * 24) + 1)));
     }
 
+    // will need a sort algorithm
+
+
+    function mapping(){
+        // a function to estimate a time range such that
+        // i) 0.104666667 is the fastest orbital period
+        // that the steps between ceiling and floor are divisible by 6
+
+
+//        Mercury = 58 dayz 15 hours 36 minutes  | 84,456 mins | 58.81337 [0474
+//        Venus = 243days 0hours 14 minutes (retrograde) | 349,934 mins | 243.68663
+//        Earth = 23hours 56minutes 4 seconds | 1,436 mins | 1
+//        Mars = 24hours 37 minutes 48seconds | 1,477 mins | 1.028552 # should equal 1.02595675
+//        Jupiter = 9hours 55minutes 30seconds | 595 mins | 0.41435
+//        Saturn = 10hours 39minutes 22seconds | 639 mins | 0.44499
+//        Uranus = 17hours 14minutes (retrograde) | 1034 mins | 0.72006
+//        Neptune = 16hours 7minutes | 967 mins | 0.67339 # shoudl equal 0.67125
+//        Pluto = 6days 9hours 18minutes | 9198 mins | 6.40529
+//        trivia via https://answers.yahoo.com/question/index?qid=20081126225700AAS67Wu
+
+    }
 
     function Orbit(plots,startAngle, endAngle, speed, name, stroke){
         console.log(arguments);
@@ -206,7 +228,7 @@
         for(i = 0; i < plots.length; i++){
             console.log("args: "+plots[i].x+" , "+plots[i].y+", "+plots[i].width);
             orbits.push(new Orbit(
-                    plots[i],Math.PI*1.45,Math.PI*1.5,rotationPeriods[i]
+                    plots[i],Math.PI*1.45,Math.PI*1.5,(rotationPeriods[i]*0.004341506514335894)
                     // final speed variable works in steps of 24
             ));
         }
