@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+        }
+
+        #circle {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #000000;
+            border-radius: 50%;
+        }
+
+        #small-circle{
+            margin-top: 25%;
+            margin-left: 25%;
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #e5e5e5;
+            border-radius: 50%;
+        }
+        /* @group Blink */
+
+        .blink {
+            -webkit-animation: blink 1.75s linear infinite;
+            -moz-animation: blink 1.75s linear infinite;
+            -ms-animation: blink 1.75s linear infinite;
+            -o-animation: blink 1.75s linear infinite;
+            animation: blink 1.75s linear infinite;
+        }
+
+        @-webkit-keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.01% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        @-moz-keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.01% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        @-ms-keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.01% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        @-o-keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.01% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.01% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* @end */
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="circle">
+        <div id="small-circle" class="blink">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
