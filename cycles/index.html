@@ -107,7 +107,7 @@
     var frameInterval = 60;
     var first = then;
 
-    var toggle = true;
+    var toggle = false;
 
     // bg layer ~ render static Orbits here
     var baseCanvas = document.getElementById("BaseCanvas");
@@ -118,13 +118,12 @@
 
 
     var orbits = new Array(); // stores Objects that representing moving orbiting planet
-    var plots = new Array(); // stores the grid points which arcs and orbits trace their radius from
     var planetData = new Array(58.81337, 243.68663, 1, 1.028552, 0.41435, 0.44499, 0.72006, 0.67339, 6.40529);
     var rotationPeriods = new Array(); // array of floats, stores the scale to be mapped to orbits
     var grid = 9;
 
     for(i = 0; i < grid; i++){
-        rotationPeriods.push((((Math.random() * 24) + 1)));
+        rotationPeriods.push((((Math.random() * 24) + 1))); // 24 is the max threshold of speed
     }
 
     // will need a sort algorithm
@@ -188,12 +187,12 @@
 //        console.log("Orbit"+this.name+" passed");
     }
 
-    var concentricCalc = function(dim, grid, context, plots, colors){
+    var concentricCalc = function(dim, grid, context, colors){
         // draws a base layer of concentric circles that represent the orbit of planets
         // - mostly useful to make the faster cycles consistently circular
         // grid array is used as index for amount of circles to render concentrically
+        var plots = new Array(); // stores the grid points which arcs and orbits trace their radius from
         var ctx = context;
-        var gridRows = Math.sqrt(grid);
         var centre = dim/2;
         var radius = centre/1.075;
         var clockWise =  false;
@@ -216,11 +215,11 @@
         return plots;
     };
 
-    var gridArcCalc = function(dim, grid, context, plots, colours){
+    var gridArcCalc = function(dim, grid, context, colours){
         // draws a base layer gird of separate circles that represent the orbit of planets
         // - mostly useful to make the faster cycles consistently circular
         // dim assumes that a square space is to be plotted
-        console.log(typeof(plots));
+        var plots = new Array(); // stores the grid points which arcs and orbits trace their radius from
         var ctx = context;
         var gridRows = Math.sqrt(grid);
         var centre = (dim/gridRows)/2;
@@ -253,13 +252,13 @@
 
     // choose one of gridArcCalc or concentricCalc below
     // or duplicate the createOrbits call
-    if(toggle){
-        concentricCalc(orbitsCanvas.clientHeight, grid, baseContext, plots, colors); // create orbits concentrically
-        createOrbits(plots,rotationPeriods); // render moving arcs that simulate a planet moving
-    } else {
-        gridArcCalc(orbitsCanvas.clientHeight, grid, baseContext, plots, colors); // create the orbit outlines
-        createOrbits(plots,rotationPeriods); // render moving arcs that simulate a planet moving
-    }
+
+        var concentricPlots = concentricCalc(orbitsCanvas.clientHeight, grid, baseContext, colors); // create orbits concentrically
+        createOrbits(concentricPlots,rotationPeriods); // render moving arcs that simulate a planet moving
+
+        var gridPlots = gridArcCalc(orbitsCanvas.clientHeight, grid, baseContext, colors); // create the orbit outlines
+        createOrbits(gridPlots,rotationPeriods); // render moving arcs that simulate a planet moving
+
 
 
 
