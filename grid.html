@@ -12,43 +12,6 @@
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
 
-    var hw = 108;
-
-    // Draw shapes
-//    for (i=0;i<3;i++){
-//        for(j=0;j<3;j++){
-//            ctx.beginPath();
-//            var x          = hw+j*(2*hw);               // x coordinate
-//            var y          = hw+i*(2*hw);               // y coordinate
-//            var radius     = hw/1.25;                    // Arc radius
-//            var startAngle = 0;                     // Starting point on circle
-//            var endAngle   = Math.PI*2; // End point on circle
-//            var clockwise  = i%2==0 ? false : true; // clockwise or anticlockwise
-//
-//            ctx.arc(x,y,radius,startAngle,endAngle, clockwise);
-//
-//
-//                ctx.stroke();
-//
-//        }
-//    }
-
-    var colours = new Array(
-            // using websafe for time being
-            hexToRgb('#0000FF'),
-            hexToRgb("#00FF00"),
-            hexToRgb("#9900FF"),
-            hexToRgb("#CC6600"),
-            hexToRgb("#FF0000"),
-            hexToRgb("#FFFF00"),
-            hexToRgb("#FFFFFF"),
-            hexToRgb("#CC0066"),
-            hexToRgb("#000066"),
-            hexToRgb("#33FF99"),
-            hexToRgb("#FF6600"),
-            hexToRgb("#FF0099")
-    );
-
     var colors = new Array(
             // using websafe for time being
             '#0000FF',
@@ -67,9 +30,9 @@
     );
     var plots = new Array();
 
-    console.log(colours);
+    console.log(colors);
 
-    var gridCalc = function(dim, grid, context, plots, colours){
+    var gridCalc = function(dim, grid, context, plots, colors){
         // dim assumes that a square space is to be plotted
         console.log(typeof(plots));
         var ctx = context;
@@ -86,14 +49,14 @@
                 var startAngle = 0;
                 var endAngle = Math.PI*2;
                 var clockWise =  false;
-                ctx.strokeStyle = colours[counter];
+                ctx.strokeStyle = colors[counter];
                 ctx.arc(x,y,radius,startAngle,endAngle, clockWise);
                 ctx.stroke();
                 plots.push({
                     'x': x,
                     'y': y,
                     'width': radius,
-                    'color': colours[counter]
+                    'color': colors[counter]
                 });
                 counter++;
             }
@@ -109,20 +72,6 @@
         return "rgb("+conversion.r+','+conversion.g+','+conversion.b+")";
     }
 
-    function hexToRgb(hex) {
-        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-            return r + r + g + g + b + b;
-        });
-
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        } : null;
-    }
 </script>
 
 </body>
