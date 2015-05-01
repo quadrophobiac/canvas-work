@@ -64,13 +64,38 @@
         return plots;
     };
 
+    var concentric = function(dim, grid, context, plots, colors){
+
+        // grid array is used as index for amount of circles to render concentrically
+        var ctx = context;
+        var gridRows = Math.sqrt(grid);
+        var centre = dim/2;
+        var radius = centre/1.075;
+        var clockWise =  false;
+        var startAngle = 0;
+        var endAngle = Math.PI*2;
+        for(i = 0; i < grid; i++) {
+            radius = radius - (15);
+            ctx.beginPath();
+            ctx.strokeStyle = colors[i];
+            ctx.arc(centre, centre, radius, startAngle, endAngle, clockWise);
+            ctx.stroke();
+            plots.push({
+                'x': centre,
+                'y': centre,
+                'width': radius,
+                'color': colors[i]
+            });
+            console.log("iteration = "+i);
+        }
+        return plots;
+    };
+
 //    gridCalc(950, 9, ctx); // nice geometry effects
-    gridCalc(650, 9, ctx, plots, colors); // nice geometry effects
+//    gridCalc(650, 9, ctx, plots, colors); // nice geometry effects
+    concentric(650,9, ctx, plots, colors);
     console.log(plots);
 
-    function renderRGB(conversion){
-        return "rgb("+conversion.r+','+conversion.g+','+conversion.b+")";
-    }
 
 </script>
 
