@@ -75,7 +75,7 @@
         var startAngle = 0;
         var endAngle = Math.PI*2;
         for(i = 0; i < grid; i++) {
-            radius = radius - (15);
+            radius = radius - 4*(Math.PI*2);
             ctx.beginPath();
             ctx.strokeStyle = colors[i];
             ctx.arc(centre, centre, radius, startAngle, endAngle, clockWise);
